@@ -1,8 +1,16 @@
+
+# Изменяемые типы и неизменяемые:
+
+# Изменяемые: список, set и dict
+# Неизменяемые: строки, числа, десятичные числа, логический тип данных
+
+
 # integer_ = 1        # integer -- целочисленное число
 # string_ = "string"  # string -- строка
 # float_ = 10.5       # float -- десятичное число
 # boolean_ = True     # False -- boolean -- логический
 # none_ = None        # NoneType
+
 
 # print(integer_)
 
@@ -37,5 +45,11 @@
 #
 # # a * a
 
+# f-strings
 
-print(2 ** (2 + 1))
+print(str(3) + "2") # конкатенация
+# a = 5
+# print(f'{dict_["a"]}')
+
+
+
