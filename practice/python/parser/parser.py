@@ -1,8 +1,17 @@
+# from typing import Any
+#
+# import requests
+# from bs4 import BeautifulSoup
+# from datetime import datetime
+# import csv
+import csv
+from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
+
 
 # TODO: исправить так, чтобы это заработало в рамках файла
 # https://www.w3schools.com/python/python_file_handling.asp
@@ -16,6 +25,17 @@ from datetime import datetime
 # * https://docs.python.org/3/library/csv.html -- попробовать записать в csv
 
 
+# TODO:
+
+# 1. Создать таблицу в БД
+#       1. raw + tech_changed_dttm(data + time)
+#       2. unique (24) + update
+# 2. Сделать функции загрузки в бд
+
+# TBD: to be done
+
+# Регулярная загрузка в базу
+
 def get_soup(request_text: str) -> BeautifulSoup:
     '''Возвращает BeautifulSoup объект'''
     return BeautifulSoup(request_text,  'html.parser')
@@ -24,11 +44,20 @@ def write_data_to_txt(string_: str) -> None:
     with open(f'data_{datetime.now().date()}.txt', 'w', encoding="utf-8") as file:
         file.write(string_)
 
+# import os
+# os.path.exists()
+def write_data_to_csv(headers: list, data: list, file_path: Path):
+    with open(file_path, 'w', newline="", encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(headers)
+        writer.writerows(data)
+
 
 def get_data(url: str) -> Any:
     '''Отправляет запрос на сайт'''
     request_ = requests.get(url)
 
+    # print(request_.text)
     soup = get_soup(request_.text)
 
     th_s = soup.find_all('th')[:5]
@@ -36,15 +65,24 @@ def get_data(url: str) -> Any:
 
     headers = [s.text.strip() for s in th_s]
     string_ = "| " + " | ".join(headers) + " |" + "\n"
+    data = []
+
     for tr in tr_s:
         td_s = (tr.find_all("td"))[:5]
-        for i in range(len(td_s)):
-            if i == 0:
-                string_ += "| " + td_s[i].text + " |"
-            else:
-                string_ += td_s[i].text + " |"
-        string_ += "\n"
 
-    write_data_to_txt(string_=string_)
+        string_ += "| " + " | ".join(td.text for td in td_s) + " |\n"
+        print('str', string_)
+        if td_s:
+            row = [td.text for td in td_s]
+            print(row)
+            data.append(row)
+    # print(data)
+    # write_data_to_txt(string_=string_)
+    write_data_to_csv(headers=headers, data=data, file_path=f'{datetime.now().date()}.csv')
 
 get_data(url='https://finance.yahoo.com/currencies/')
+
+
+# delimiter ;
+# name; age; surname
+# 'a'; 23; 'b'
