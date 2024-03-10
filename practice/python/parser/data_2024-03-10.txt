@@ -1,0 +1,26 @@
+| Symbol | Name | Last Price | Change | % Change |
+
+| EURUSD=X |EUR/USD |1.0942 |-0.0008 |-0.08% |
+| JPY=X |USD/JPY |147.0200 |-0.8820 |-0.60% |
+| GBPUSD=X |GBP/USD |1.2859 |+0.0050 |+0.39% |
+| AUDUSD=X | |N/A |N/A |N/A |
+| NZDUSD=X | |N/A |N/A |N/A |
+| EURJPY=X | |N/A |N/A |N/A |
+| GBPJPY=X | |N/A |N/A |N/A |
+| EURGBP=X | |N/A |N/A |N/A |
+| EURCAD=X | |N/A |N/A |N/A |
+| EURSEK=X | |N/A |N/A |N/A |
+| EURCHF=X | |N/A |N/A |N/A |
+| EURHUF=X | |N/A |N/A |N/A |
+| EURJPY=X | |N/A |N/A |N/A |
+| CNY=X | |N/A |N/A |N/A |
+| HKD=X | |N/A |N/A |N/A |
+| SGD=X | |N/A |N/A |N/A |
+| INR=X | |N/A |N/A |N/A |
+| MXN=X | |N/A |N/A |N/A |
+| PHP=X | |N/A |N/A |N/A |
+| IDR=X | |N/A |N/A |N/A |
+| THB=X | |N/A |N/A |N/A |
+| MYR=X | |N/A |N/A |N/A |
+| ZAR=X | |N/A |N/A |N/A |
+| RUB=X | |N/A |N/A |N/A |
