@@ -3,7 +3,6 @@ from typing import Any
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-import os
 
 # TODO: исправить так, чтобы это заработало в рамках файла
 # https://www.w3schools.com/python/python_file_handling.asp
@@ -34,17 +33,16 @@ def get_data(url: str) -> Any:
 
     th_s = soup.find_all('th')[:5]
     tr_s = soup.find_all('tr')
-    td_s = soup.find_all("td")[:5]
 
-    headers = [s.text.strip() for s in th_s][:5]
+    headers = [s.text.strip() for s in th_s]
     string_ = "| " + " | ".join(headers) + " |" + "\n"
     for tr in tr_s:
-
-        for i in range(len(tr.find_all("td")[:5])):
+        td_s = (tr.find_all("td"))[:5]
+        for i in range(len(td_s)):
             if i == 0:
-                string_ += "| " + tr.find_all("td")[i].text + " |"
+                string_ += "| " + td_s[i].text + " |"
             else:
-                string_ += tr.find_all("td")[i].text + " |"
+                string_ += td_s[i].text + " |"
         string_ += "\n"
 
     write_data_to_txt(string_=string_)
