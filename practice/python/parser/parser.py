@@ -1,9 +1,3 @@
-# from typing import Any
-#
-# import requests
-# from bs4 import BeautifulSoup
-# from datetime import datetime
-# import csv
 import csv
 from datetime import datetime
 from pathlib import Path
@@ -36,6 +30,17 @@ from bs4 import BeautifulSoup
 
 # Регулярная загрузка в базу
 
+
+# proxy: socks5://45.132.177.229:64803:LY8276Wj:cEBtmNNF
+#                      ip
+
+#
+# http
+# https ipv4
+
+#256.256.256.256
+
+
 def get_soup(request_text: str) -> BeautifulSoup:
     '''Возвращает BeautifulSoup объект'''
     return BeautifulSoup(request_text,  'html.parser')
@@ -44,8 +49,6 @@ def write_data_to_txt(string_: str) -> None:
     with open(f'data_{datetime.now().date()}.txt', 'w', encoding="utf-8") as file:
         file.write(string_)
 
-# import os
-# os.path.exists()
 def write_data_to_csv(headers: list, data: list, file_path: Path):
     with open(file_path, 'w', newline="", encoding='utf-8') as file:
         writer = csv.writer(file)
@@ -55,7 +58,14 @@ def write_data_to_csv(headers: list, data: list, file_path: Path):
 
 def get_data(url: str) -> Any:
     '''Отправляет запрос на сайт'''
-    request_ = requests.get(url)
+
+    proxies = {
+        "http": "http://LY8276Wj:cEBtmNNF@45.132.177.229:64803"
+    }
+
+    request_ = requests.get(url, proxies=proxies)
+
+    print(request_.text)
 
     # print(request_.text)
     soup = get_soup(request_.text)

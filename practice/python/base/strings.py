@@ -24,7 +24,7 @@ string = "string"
 """
 # print(string[0]) # первый элемент в наборе (самый левый)
 # print(string[1]) # второй элемент в наборе
-#
+# #
 # print(string[-1]) # обращение к последнему справа элементу
 # print(string[len(string) - 1])
 # print(string[len(string)])
@@ -60,53 +60,53 @@ string[start:end:step]
 #
 # print(string[1:5:2])
 #
-# print(string[10])
+# # print(string[10])
 # print(string[-1])
 # print(string[len(string) - 1])
 # print(string[::]) # от начала до конца с шагом 1. значения проставляются по умолчанию
-print(string[::-1]) # строка наоборот
+# print(string[::-1]) # строка наоборот
 #
 #
-# сложение строк
-string1 = "abc"
-string2 = "aaa"
-
-print(string1 + string2) # Конкатенация
-print(string1 * 3)
+# # сложение строк
+# string1 = "abc"
+# string2 = "aaa"
 #
-print(string1[0] + string2[0])
-#
-# # получение длины
-print(len(string1) + len(string2)) # 3 + 3
+# print(string1 + string2) # Конкатенация
+# print(string1 * 3)
+# #
+# print(string1[0] + string2[0])
+# #
+# # # получение длины
+# print(len(string1) + len(string2)) # 3 + 3
 #
 # поиск подстроки в строке
 
 """
-1  23456
+0  12345
 ________ 
 aaabcdef
 
-12 3 456
+01 2 456
 ________ 
 abcccdef
 
 """
 #
 # # если элемент присутствует в строке, то результат: номер первого вхождения
-# # если элемента нет, то -1
+# # # если элемента нет, то -1
 string_ = "aaabbbccc"
 print(string_.find("aaa", 0, len(string_) - 1))
 print(string_.find("ddd"))
 #
 print(string_.find('.'))    # ->
 print(string_.rfind('.'))   # <-
-
-
-
 #
-print(string_.index("dd")) # ОШИБКА!
 #
-# print(string_.replace('aaa', '###'))
+#
+# #
+# # print(string_.index("dd")) # ОШИБКА!
+# #
+print(string_.replace('aaa', '###'))
 
 # def main():
 #   a = 5
@@ -131,17 +131,17 @@ string__ = "aaa bbb ccc"
 # по умолчанию – split() - разбиение по пробелу
 # 
 # "aaa bbb ccc".split() -> ['aaa', 'bbb', 'ccc']
-# "aaa,bbb,ccc".split(',') -> ['aaa', 'bbb', 'ccc']
+# "aaa,bbb,ccc".split(',', maxsplit=3) -> ['aaa', 'bbb', 'ccc']
 # """
 #
 #
-# print("5".isdigit()) # проверка на цифру
-# print("a".isalpha()) # проверка на букву
-# print("a".islower()) # проверка на нижний регистр
-# print("A".isupper()) # проверка на верхний регистр
-# print(" ".isspace()) # проверка на пробел
-#
-#
+print("5".isdigit()) # проверка на цифру
+print("a".isalpha()) # проверка на букву
+print("a".islower()) # проверка на нижний регистр
+print("A".isupper()) # проверка на верхний регистр
+print(" ".isspace()) # проверка на пробел
+# #
+# #
 # # выводим каждый элемент строки отдельно
 # for element in string__:
 #     print(element.isdigit())  # проверка на цифру
@@ -149,4 +149,13 @@ string__ = "aaa bbb ccc"
 #     print(element.islower())  # проверка на нижний регистр
 #     print(element.isupper())  # проверка на верхний регистр
 #     print(element.isspace())  # проверка на пробел
-#     print()
+#
+#     print(element, element.upper())
+#     print(element.)
+# #
+#
+#
+a = [str(i) for i in [1,2,3]]
+
+print(a)
+print(", ".join(a))
