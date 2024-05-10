@@ -1,7 +1,5 @@
 """ Подключение модулей """
-from typing import Annotated
-
-from fastapi import FastAPI, Path
+from fastapi import FastAPI
 from pydantic import BaseModel
 import psycopg2
 
@@ -23,7 +21,9 @@ def execute(connect, sql):
     return query
 
 class Item(BaseModel):
+    """ Класс для валидации """
     item_id: int
+
 
 
 app = FastAPI()  # Создание приложения
@@ -31,9 +31,9 @@ app = FastAPI()  # Создание приложения
 
 @app.get("/skins/{item_id}")
 async def read_id(
-        item_id: Annotated[int, Path(title="The ID of the item to get", ge=0, le=1000)]):
+        item_id: Item):
     """ Функция чтения item_id """
-    sql = f""" SELECT * FROM public.skins WHERE id = {int(item_id)};  """
+    sql = f""" SELECT * FROM public.skins WHERE id = {item_id};  """
     query = execute(conn, sql)
     return {"id": query[0],
             "name": query[1],
