@@ -2,6 +2,7 @@ import json
 
 
 def read_user():
+    """Чтение информации о пользователе"""
     with open('data/users.json') as stream:
         users = json.load(stream)
 
@@ -9,6 +10,7 @@ def read_user():
 
 
 def read_questions(position: int):
+    """Чтение вопросов --  TODO: нужно добавить чтение/изменение конкретного/всех вопроса/ов"""
     with open('data/questions.json') as stream:
         questions = json.load(stream)
 
