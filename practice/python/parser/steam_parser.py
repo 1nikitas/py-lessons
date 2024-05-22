@@ -48,4 +48,4 @@ def execute(connection, sql, dates):
 
 
 #connection = connection(r"D:\SQL db\Steam")
-get_data(f'https://steamcommunity.com/market/search?q=#p1_popular_desc')
+get_data('https://steamcommunity.com/market/search?q=#p1_popular_desc')

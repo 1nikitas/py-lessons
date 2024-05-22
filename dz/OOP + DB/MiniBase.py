@@ -116,7 +116,7 @@ class Admin(User):
         return f"Модератор создан) id: {self.id}, Имя: {self.name}, Возраст: {self.age}, Роль: {self._role}"
 
     def clean_all(self):
-        sql = f"DELETE FROM RegOnServer"
+        sql = "DELETE FROM RegOnServer"
         super().change(sql)
         return "База успешно очищена!"
 

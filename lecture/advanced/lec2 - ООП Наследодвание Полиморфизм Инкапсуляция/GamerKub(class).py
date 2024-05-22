@@ -46,7 +46,7 @@ def InputGamer():
 igrok1, igrok2 = InputGamer()
 g1 = Gamer(igrok1)
 g2 = Gamer(igrok2)
-d1 = Dice();
+d1 = Dice()
 
 k1 = k2 = 0    # количество побед каждого игрока
 

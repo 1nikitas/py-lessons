@@ -1,4 +1,3 @@
-import math
 import random
 
 class Dice:
@@ -35,7 +34,7 @@ g1 = Gamer('Vds')
 ##g1.brosok()
 ##print(g1)
 
-d1 = Dice();
+d1 = Dice()
 print(d1.n)
 g1.brosok(d1)
 print(g1)
