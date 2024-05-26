@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import json
+import aiofiles
+
 
 app = FastAPI()
 """
@@ -13,9 +15,8 @@ def read_user():
 
 @app.get("/users/")
 async def read_user():
-    with open("data/users.json") as stream:
-        users = json.load(stream)
-        return users
+    async with aiofiles.open("data/users.json", mode="r") as stream:
+        return json.load(stream)
 
 
 @app.get("/user/info")
@@ -70,16 +71,35 @@ def read_alternatives(question_id: int):
 
 @app.get("/user/answers")
 async def read_answers(user_id: int):
-    with open("data/answers.json") as stream:
+    async with aiofiles.open("data/answers.json", mode="r") as stream:
         answers = json.load(stream)
-        for answer in answers:
-            if answer.get("user_id") == user_id:
-                with open("data/alternatives.json") as alternatives:
-                    for alternative in alternatives:
-                        if answer["alternative_id"] == alternative["id"]:
-                            return alternative
-            else:
-                return {"error": "Пользователь с таким id не найден!!!"}
+
+        user_answer = next(
+            (answer for answer in answers if answer.get("user_id") == user_id), None
+        )
+
+        if user_answer is None:
+            raise HTTPException(
+                status_code=404, detail="Пользователь с таким id не найден!!!"
+            )
+
+        async with aiofiles.open("data/alternatives.json", mode="r") as alt_stream:
+            alternatives = json.loads(await alt_stream.read())
+            alternative = next(
+                (
+                    alt
+                    for alt in alternatives
+                    if alt["id"] == user_answer["alternative_id"]
+                ),
+                None,
+            )
+
+            if alternative is None:
+                raise HTTPException(
+                    status_code=404, detail="Альтернатива с таким id не найдена!!!"
+                )
+
+            return alternative
 
 
 """
