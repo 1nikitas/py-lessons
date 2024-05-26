@@ -20,6 +20,7 @@ def read_questions(position: int):
 
 
 def read_alternatives(question_id: int):
+    """"""
     alternatives_question = []
     with open('data/alternatives.json') as stream:
         alternatives = json.load(stream)
