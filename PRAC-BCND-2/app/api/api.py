@@ -1,13 +1,32 @@
+from fastapi import FastAPI
 import json
 
-
+app = FastAPI()
+'''
 def read_user():
     with open('data/users.json') as stream:
         users = json.load(stream)
 
     return users
+'''
+
+@app.get("/users/")
+async def read_user():
+    with open('data/users.json/') as stream:
+        users = json.load(stream)
+        return users
+
+@app.get("/user/info")
+def read_user(id: int):
+    with open(r'C:\Users\admin\Desktop\Git_BD\PRAC-BCND-2\data\users.json') as stream:
+        users = json.load(stream)
+        for user in users:
+            if user.get('id') == id:
+                return user
+            else: return {'error': f'Пользователь с таким id не найден!!!{id}'}
 
 
+'''
 def read_questions(position: int):
     with open('data/questions.json') as stream:
         questions = json.load(stream)
@@ -15,8 +34,20 @@ def read_questions(position: int):
     for question in questions:
         if question['position'] == position:
             return question
+'''
+
+@app.get("/user/questions")
+async def read_questions(position: int):
+    with open(r'C:\Users\admin\Desktop\Git_BD\PRAC-BCND-2\data\questions.json') as stream:
+        questions = json.load(stream)
+        for question in questions:
+            if question.get('position') == position:
+                return question
+            else:
+                print('error: Вопроса на такой позиции не существует!!!')
 
 
+'''
 def read_alternatives(question_id: int):
     alternatives_question = []
     with open('data/alternatives.json') as stream:
@@ -27,8 +58,20 @@ def read_alternatives(question_id: int):
             alternatives_question.append(alternative)
 
     return alternatives_question
+'''
 
-
+@app.get("/user/answers")
+async def read_answers(user_id: int):
+    with open('data/answers.json') as stream:
+        answers = json.load(stream)
+        for answer in answers:
+            if answer.get('user_id') == user_id:
+                with open('data/alternatives.json') as alternatives:
+                    for alternative in alternatives:
+                        if answer['alternative_id'] == alternative['id']:
+                            return alternative
+            else: return {'error': 'Пользователь с таким id не найден!!!'}
+'''
 def create_answer(payload):
     answers = []
     result = []
@@ -50,8 +93,40 @@ def create_answer(payload):
             result.append(car)
 
     return result
+'''
+
+@app.post("/user/answer/{id}")
+async def create_answer(payload: dict, id:int):
+    with open('data/answers.json') as stream:
+        answers = json.load(stream)
+        for answer in answers:
+            if answer.get('user_id') == id and payload.get('question_id') == answer.get("question_id"):
+                with open('data/alternatives.json') as stream:
+                    alternatives = json.load(stream)
+                    for alternative in alternatives:
+                        if answer.get("question_id") == alternative.get('question_id'):
+                            alternative['alternative'] = payload.get('answer')
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 def read_result(user_id: int):
     user_result = []
 
@@ -77,3 +152,4 @@ def read_result(user_id: int):
                     user_result.append(car)
 
     return user_result
+'''
