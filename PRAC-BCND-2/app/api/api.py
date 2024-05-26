@@ -46,13 +46,23 @@ def read_questions(position: int):
 
 @app.get("/user/questions")
 async def read_questions(position: int):
-    with open("PRAC-BCND-2/data/questions.json") as stream:
+    async with aiofiles.open("PRAC-BCND-2/data/questions.json", mode="r") as stream:
         questions = json.load(stream)
-        for question in questions:
-            if question.get("position") == position:
-                return question
-            else:
-                print("error: Вопроса на такой позиции не существует!!!")
+        question = next(
+            (
+                question
+                for question in questions
+                if question.get("position") == position
+            ),
+            None,
+        )
+        if question is not None:
+            return question
+        else:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Вопроса на такой позиции не существует!!! {id}",
+            )
 
 
 """
