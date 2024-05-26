@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import json
 
 app = FastAPI()
@@ -20,11 +20,12 @@ async def read_user():
 def read_user(id: int):
     with open('data/users.json') as stream:
         users = json.load(stream)
-        for user in users:
-            if user.get('id') == id:
-                return user
+        user = next((user for user in users if user.get('id') == id), None)
+
+        if user is not None:
+            return user
         else:
-            return {'error': f'Пользователь с таким id не найден!!!{id}'}
+            raise HTTPException(status_code=404, detail=f"Пользователь с таким id не найден!!! {id}")
 
 
 '''
