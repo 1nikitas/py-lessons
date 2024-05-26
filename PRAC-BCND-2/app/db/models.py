@@ -21,6 +21,6 @@ def connection(url):
     except Exception as error:
         print(f"Не удалось выполнить соединение к базе:{error}")
         return None
+
+
 conn = connection(URL)
-
-
