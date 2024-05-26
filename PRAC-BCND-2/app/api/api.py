@@ -12,18 +12,19 @@ def read_user():
 
 @app.get("/users/")
 async def read_user():
-    with open('data/users.json/') as stream:
+    with open('data/users.json') as stream:
         users = json.load(stream)
         return users
 
 @app.get("/user/info")
 def read_user(id: int):
-    with open(r'C:\Users\admin\Desktop\Git_BD\PRAC-BCND-2\data\users.json') as stream:
+    with open('data/users.json') as stream:
         users = json.load(stream)
         for user in users:
             if user.get('id') == id:
                 return user
-            else: return {'error': f'Пользователь с таким id не найден!!!{id}'}
+        else:
+            return {'error': f'Пользователь с таким id не найден!!!{id}'}
 
 
 '''
@@ -38,7 +39,7 @@ def read_questions(position: int):
 
 @app.get("/user/questions")
 async def read_questions(position: int):
-    with open(r'C:\Users\admin\Desktop\Git_BD\PRAC-BCND-2\data\questions.json') as stream:
+    with open('PRAC-BCND-2/data/questions.json') as stream:
         questions = json.load(stream)
         for question in questions:
             if question.get('position') == position:
