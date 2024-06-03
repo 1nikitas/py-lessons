@@ -139,17 +139,70 @@ def create_answer(payload):
 
 @app.post("/user/answer/{id}")
 async def create_answer(payload: dict, id: int):
-    with open("data/answers.json") as stream:
-        answers = json.load(stream)
-        for answer in answers:
-            if answer.get("user_id") == id and payload.get("question_id") == answer.get(
-                "question_id"
-            ):
-                with open("data/alternatives.json") as stream:
-                    alternatives = json.load(stream)
-                    for alternative in alternatives:
-                        if answer.get("question_id") == alternative.get("question_id"):
-                            alternative["alternative"] = payload.get("answer")
+    '''
+
+        {
+            "status": "success",
+            "id": 1,
+            "question_id": 1,
+            "alternative": "new answer",
+            "method": "create/update"
+
+        }
+    '''
+
+    # Чтение файла answers.json
+    async with aiofiles.open("data/answers.json", mode='r') as stream_1:
+        answers_content = await stream_1.read()
+        answers = json.loads(answers_content)
+        answer = next((answer for answer in answers if answer.get("question_id") == payload.get("question_id")),
+                      None)
+        print(answer)
+    if answer is None:
+        # Создаем новый ответ, если его нет
+        new_answer = {
+            "id": len(answers) + 1,
+            "question_id": payload.get("question_id"),
+            "alternative": payload.get("alternative")
+        }
+        answers.append(new_answer)
+        method = "create"
+    else:
+        # Изменяем существующий ответ
+        answer["alternative"] = payload.get("alternative")
+        method = "update"
+
+    # Запись обновленного файла answers.json
+    async with aiofiles.open("data/answers.json", mode='w') as stream_1:
+        await stream_1.write(json.dumps(answers, indent=4))
+
+    # Чтение файла alternatives.json
+    async with aiofiles.open("data/alternatives.json", mode='r') as stream_2:
+        alternatives_content = await stream_2.read()
+        alternatives = json.loads(alternatives_content)
+        alternative = next((alternative for alternative in alternatives if
+                            alternative.get("question_id") == payload.get("question_id")), None)
+
+    if alternative is None:
+        # Создаем новый альтернативный ответ, если его нет
+        new_alternative = {
+            "id": alternatives[-1].get("id") + 1 if alternatives else 1,
+            "question_id": payload.get("question_id"),
+            "alternative": payload.get("alternative")
+        }
+        alternatives.append(new_alternative)
+    else:
+        # Изменяем существующий альтернативный ответ
+        alternative["alternative"] = payload.get("alternative")
+
+    # Запись обновленного файла alternatives.json
+    async with aiofiles.open("data/alternatives.json", mode='w') as stream_2:
+        await stream_2.write(json.dumps(alternatives, indent=4))
+
+    return {"status": "success","user_id": answer["user_id"], "alternative_id": answer["alternative_id"],"question_id":answer["question_id"],"alternative": alternative["alternative"],"method": method}
+
+
+
 
 
 """
