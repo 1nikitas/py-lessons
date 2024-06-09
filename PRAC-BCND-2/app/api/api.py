@@ -232,3 +232,46 @@ def read_result(user_id: int):
 
     return user_result
 """
+@app.post("/user/add")
+async def create_answer(payload: dict):
+    async with aiofiles.open("data/users.json", mode='w') as stream_1:
+        users_content = await stream_1.read()
+        users = json.loads(users_content)
+        user = next((user for user in users if user.get("id") == payload.get("id")),
+                      None)
+        if user is None:
+            raise HTTPException(
+                status_code=404, detail="Пользователь с таким id уже существует!!!"
+            )
+        new_user = {
+            "id": payload.get("id"),
+            "name": payload.get("name"),
+            "mail": payload.get("mail"),
+            "phone": payload.get("phone")
+        }
+        users.append(new_user)
+        await stream_1.write(json.dumps(users, indent=4))
+
+@app.post("/user/add")
+async def create_answer(payload: dict):
+    async with aiofiles.open("data/users.json", mode='w') as stream_1:
+        users_content = await stream_1.read()
+        users = json.loads(users_content)
+        user = next((user for user in users if user.get("id") == payload.get("id")),
+                      None)
+        if user is None:
+            raise HTTPException(
+                status_code=404, detail="Пользователь с таким id не существует!!!"
+            )
+        del_user = {
+            "id": payload.get("id"),
+            "name": payload.get("name"),
+            "mail": payload.get("mail"),
+            "phone": payload.get("phone")
+        }
+        user = next((user for user in users if del_user.get("id") == user.get("id")),None)
+        users.remove(users.index(user))
+        await stream_1.write(json.dumps(users, indent=4))
+
+
+
