@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import json
 import aiofiles
+from ..db.models import CreateUser, DeleteUser
 
 
 app = FastAPI()
@@ -14,7 +15,7 @@ def read_user():
 
 
 @app.get("/users/")
-async def read_user():
+async def read_users():
     async with aiofiles.open("data/users.json", mode="r") as stream:
         return json.load(stream)
 
@@ -233,45 +234,53 @@ def read_result(user_id: int):
     return user_result
 """
 @app.post("/user/add")
-async def create_answer(payload: dict):
-    async with aiofiles.open("data/users.json", mode='w') as stream_1:
+async def create_user(user: CreateUser):
+    async with aiofiles.open("data/users.json", mode='r') as stream_1:
         users_content = await stream_1.read()
         users = json.loads(users_content)
-        user = next((user for user in users if user.get("id") == payload.get("id")),
-                      None)
-        if user is None:
-            raise HTTPException(
-                status_code=404, detail="Пользователь с таким id уже существует!!!"
-            )
         new_user = {
-            "id": payload.get("id"),
-            "name": payload.get("name"),
-            "mail": payload.get("mail"),
-            "phone": payload.get("phone")
+            "id": len(users)+1,
+            "name": user.name,
+            "mail": user.mail,
+            "phone": user.phone
         }
         users.append(new_user)
-        await stream_1.write(json.dumps(users, indent=4))
+    async with aiofiles.open("data/users.json", mode='w') as stream_2:
+        await stream_2.write(json.dumps(users, indent=4))
+    return {"Новый пользователь:": {
+            "id": len(users) + 1,
+            "name": user.name,
+            "mail": user.mail,
+            "phone": user.phone
+        }}
 
-@app.post("/user/add")
-async def create_answer(payload: dict):
-    async with aiofiles.open("data/users.json", mode='w') as stream_1:
+@app.post("/user/delete")
+async def delete_user(id: DeleteUser):
+    async with aiofiles.open("data/users.json", mode='r') as stream_1:
         users_content = await stream_1.read()
         users = json.loads(users_content)
-        user = next((user for user in users if user.get("id") == payload.get("id")),
+        user = next((user for user in users if user.get("id") == id),
                       None)
         if user is None:
             raise HTTPException(
                 status_code=404, detail="Пользователь с таким id не существует!!!"
             )
         del_user = {
-            "id": payload.get("id"),
-            "name": payload.get("name"),
-            "mail": payload.get("mail"),
-            "phone": payload.get("phone")
+            "id": user.get("id"),
+            "name": user.get("name"),
+            "mail": user.get("mail"),
+            "phone": user.get("phone")
         }
         user = next((user for user in users if del_user.get("id") == user.get("id")),None)
         users.remove(users.index(user))
-        await stream_1.write(json.dumps(users, indent=4))
+        async with aiofiles.open("data/users.json", mode='w') as stream_2:
+            await stream_2.write(json.dumps(users, indent=4))
+        return {"Удалённый пользователь:": {
+            "id": user.get("id"),
+            "name": user.get("name"),
+            "mail": user.get("mail"),
+            "phone": user.get("phone")
+        }}
 
 
 
