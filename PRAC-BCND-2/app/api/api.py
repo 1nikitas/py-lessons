@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import json
 import aiofiles
-from ..db.models import CreateUser, DeleteUser
+from ..db.models import CreateUser, DeleteUser, UpdateUser
 
 
 app = FastAPI()
@@ -282,5 +282,34 @@ async def delete_user(id: DeleteUser):
             "phone": user.get("phone")
         }}
 
+
+@app.post("/user/update/{id}")
+async def update_user(update: UpdateUser, id:int):
+    async with aiofiles.open("data/users.json", mode='r') as stream_1:
+        users_content = await stream_1.read()
+        users = json.loads(users_content)
+        user = next((user for user in users if user.get("id") == id),
+                    None)
+        if user is None:
+            raise HTTPException(
+                status_code=404, detail="Пользователь с таким id не существует!!!"
+            )
+
+        update_user = {
+            "id": id,
+            "name": UpdateUser.name,
+            "mail": UpdateUser.mail,
+            "phone": UpdateUser.phone
+        }
+        users.remove(users.index(user))
+        users.append(update_user)
+        async with aiofiles.open("data/users.json", mode='w') as stream_2:
+            await stream_2.write(json.dumps(users, indent=4))
+        return {"Обновлённый пользователь:": {
+            "id": id,
+            "name": UpdateUser.name,
+            "mail": UpdateUser.mail,
+            "phone": UpdateUser.phone
+        }}
 
 

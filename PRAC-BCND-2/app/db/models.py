@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import List
 from Constants import *
 import psycopg2
@@ -13,6 +13,18 @@ class UserAnswer(BaseModel):
     user_id: int
     answers: List[Answer]
 
+class CreateUser(BaseModel):
+    name: str
+    mail: EmailStr
+    phone: str
+
+class DeleteUser(BaseModel):
+    id: int
+
+class UpdateUser(BaseModel):
+    name: str
+    mail: EmailStr
+    phone: str
 
 def connection(url):
     try:
