@@ -1,9 +1,9 @@
-from fastapi import FastAPI, HTTPException
 import json
+
 import aiofiles
+from fastapi import FastAPI, HTTPException
 
-
-
+from app.db.schemas import CreateUser, DeleteUser, UpdateUser
 
 app = FastAPI()
 """
@@ -31,7 +31,7 @@ def read_user(id: int):
             return user
         else:
             raise HTTPException(
-                status_code=404, detail=f"Пользователь с таким id не найден!!! {id}"
+                status_code=404, detail=f"Пользователь с таким id не найден!!! {id}"  # noqa: E501
             )
 
 
@@ -141,31 +141,37 @@ def create_answer(payload):
 
 @app.post("/user/answer/{id}")
 async def create_answer(payload: dict, id: int):
-    '''
+    """
 
-        {
-            "status": "success",
-            "id": 1,
-            "question_id": 1,
-            "alternative": "new answer",
-            "method": "create/update"
+    {
+        "status": "success",
+        "id": 1,
+        "question_id": 1,
+        "alternative": "new answer",
+        "method": "create/update"
 
-        }
-    '''
+    }
+    """
 
     # Чтение файла answers.json
-    async with aiofiles.open("data/answers.json", mode='r') as stream_1:
+    async with aiofiles.open("data/answers.json", mode="r") as stream_1:
         answers_content = await stream_1.read()
         answers = json.loads(answers_content)
-        answer = next((answer for answer in answers if answer.get("question_id") == payload.get("question_id")),
-                      None)
+        answer = next(
+            (
+                answer
+                for answer in answers
+                if answer.get("question_id") == payload.get("question_id")
+            ),
+            None,
+        )
         print(answer)
     if answer is None:
         # Создаем новый ответ, если его нет
         new_answer = {
             "id": len(answers) + 1,
             "question_id": payload.get("question_id"),
-            "alternative": payload.get("alternative")
+            "alternative": payload.get("alternative"),
         }
         answers.append(new_answer)
         method = "create"
@@ -175,22 +181,28 @@ async def create_answer(payload: dict, id: int):
         method = "update"
 
     # Запись обновленного файла answers.json
-    async with aiofiles.open("data/answers.json", mode='w') as stream_1:
+    async with aiofiles.open("data/answers.json", mode="w") as stream_1:
         await stream_1.write(json.dumps(answers, indent=4))
 
     # Чтение файла alternatives.json
-    async with aiofiles.open("data/alternatives.json", mode='r') as stream_2:
+    async with aiofiles.open("data/alternatives.json", mode="r") as stream_2:
         alternatives_content = await stream_2.read()
         alternatives = json.loads(alternatives_content)
-        alternative = next((alternative for alternative in alternatives if
-                            alternative.get("question_id") == payload.get("question_id")), None)
+        alternative = next(
+            (
+                alternative
+                for alternative in alternatives
+                if alternative.get("question_id") == payload.get("question_id")
+            ),
+            None,
+        )
 
     if alternative is None:
         # Создаем новый альтернативный ответ, если его нет
         new_alternative = {
             "id": alternatives[-1].get("id") + 1 if alternatives else 1,
             "question_id": payload.get("question_id"),
-            "alternative": payload.get("alternative")
+            "alternative": payload.get("alternative"),
         }
         alternatives.append(new_alternative)
     else:
@@ -198,13 +210,17 @@ async def create_answer(payload: dict, id: int):
         alternative["alternative"] = payload.get("alternative")
 
     # Запись обновленного файла alternatives.json
-    async with aiofiles.open("data/alternatives.json", mode='w') as stream_2:
+    async with aiofiles.open("data/alternatives.json", mode="w") as stream_2:
         await stream_2.write(json.dumps(alternatives, indent=4))
 
-    return {"status": "success","user_id": answer["user_id"], "alternative_id": answer["alternative_id"],"question_id":answer["question_id"],"alternative": alternative["alternative"],"method": method}
-
-
-
+    return {
+        "status": "success",
+        "user_id": answer["user_id"],
+        "alternative_id": answer["alternative_id"],
+        "question_id": answer["question_id"],
+        "alternative": alternative["alternative"],
+        "method": method,
+    }
 
 
 """
@@ -234,34 +250,38 @@ def read_result(user_id: int):
 
     return user_result
 """
+
+
 @app.post("/user/add")
 async def create_user(user: CreateUser):
-    async with aiofiles.open("data/users.json", mode='r') as stream_1:
+    async with aiofiles.open("data/users.json", mode="r") as stream_1:
         users_content = await stream_1.read()
         users = json.loads(users_content)
         new_user = {
-            "id": len(users)+1,
-            "name": user.name,
-            "mail": user.mail,
-            "phone": user.phone
-        }
-        users.append(new_user)
-    async with aiofiles.open("data/users.json", mode='w') as stream_2:
-        await stream_2.write(json.dumps(users, indent=4))
-    return {"Новый пользователь:": {
             "id": len(users) + 1,
             "name": user.name,
             "mail": user.mail,
-            "phone": user.phone
-        }}
+            "phone": user.phone,
+        }
+        users.append(new_user)
+    async with aiofiles.open("data/users.json", mode="w") as stream_2:
+        await stream_2.write(json.dumps(users, indent=4))
+    return {
+        "Новый пользователь:": {
+            "id": len(users) + 1,
+            "name": user.name,
+            "mail": user.mail,
+            "phone": user.phone,
+        }
+    }
+
 
 @app.post("/user/delete")
 async def delete_user(id: DeleteUser):
-    async with aiofiles.open("data/users.json", mode='r') as stream_1:
+    async with aiofiles.open("data/users.json", mode="r") as stream_1:
         users_content = await stream_1.read()
         users = json.loads(users_content)
-        user = next((user for user in users if user.get("id") == id),
-                      None)
+        user = next((user for user in users if user.get("id") == id), None)
         if user is None:
             raise HTTPException(
                 status_code=404, detail="Пользователь с таким id не существует!!!"
@@ -270,27 +290,30 @@ async def delete_user(id: DeleteUser):
             "id": user.get("id"),
             "name": user.get("name"),
             "mail": user.get("mail"),
-            "phone": user.get("phone")
+            "phone": user.get("phone"),
         }
-        user = next((user for user in users if del_user.get("id") == user.get("id")),None)
+        user = next(
+            (user for user in users if del_user.get("id") == user.get("id")), None
+        )
         users.remove(users.index(user))
-        async with aiofiles.open("data/users.json", mode='w') as stream_2:
+        async with aiofiles.open("data/users.json", mode="w") as stream_2:
             await stream_2.write(json.dumps(users, indent=4))
-        return {"Удалённый пользователь:": {
-            "id": user.get("id"),
-            "name": user.get("name"),
-            "mail": user.get("mail"),
-            "phone": user.get("phone")
-        }}
+        return {
+            "Удалённый пользователь:": {
+                "id": user.get("id"),
+                "name": user.get("name"),
+                "mail": user.get("mail"),
+                "phone": user.get("phone"),
+            }
+        }
 
 
 @app.post("/user/update/{id}")
-async def update_user(update: UpdateUser, id:int):
-    async with aiofiles.open("app/api/data/users.json", mode='r') as stream_1:
+async def update_user(update: UpdateUser, id: int):
+    async with aiofiles.open("app/api/data/users.json", mode="r") as stream_1:
         users_content = await stream_1.read()
         users = json.loads(users_content)
-        user = next((user for user in users if user.get("id") == id),
-                    None)
+        user = next((user for user in users if user.get("id") == id), None)
         if user is None:
             raise HTTPException(
                 status_code=404, detail="Пользователь с таким id не существует!!!"
@@ -300,17 +323,17 @@ async def update_user(update: UpdateUser, id:int):
             "id": id,
             "name": update.name,
             "mail": update.mail,
-            "phone": update.phone
+            "phone": update.phone,
         }
         users.remove(user)
         users.append(update_user)
-    async with aiofiles.open("app/api/data/users.json", mode='w') as stream_2:
+    async with aiofiles.open("app/api/data/users.json", mode="w") as stream_2:
         await stream_2.write(json.dumps(users, indent=4))
-    return {"Обновлённый пользователь:": {
-        "id": id,
-        "name": update.name,
-        "mail": update.mail,
-        "phone": update.phone
-    }}
-
-
+    return {
+        "Обновлённый пользователь:": {
+            "id": id,
+            "name": update.name,
+            "mail": update.mail,
+            "phone": update.phone,
+        }
+    }
