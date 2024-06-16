@@ -1,11 +1,5 @@
 [
     {
-        "id": 1,
-        "name": "Mrcio",
-        "mail": "example@mail.com",
-        "phone": "98769878"
-    },
-    {
         "id": 2,
         "name": "Leandro",
         "mail": "example_leandro@mail.com",
@@ -16,5 +10,11 @@
         "name": "rgerger",
         "mail": "ehresh",
         "phone": "54764574"
+    },
+    {
+        "id": 1,
+        "name": "gg",
+        "mail": "ergeg@example.com",
+        "phone": "546"
     }
 ]
