@@ -5,6 +5,8 @@ from fastapi import FastAPI, HTTPException
 
 from app.db.schemas import CreateUser, DeleteUser, UpdateUser
 
+from app.db.Config import get_db
+
 app = FastAPI()
 """
 def read_user():

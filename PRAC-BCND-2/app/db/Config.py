@@ -1,4 +1,4 @@
-from database import SessionLocal, engine, Base
+from .database import SessionLocal, engine, Base
 
 Base.metadata.create_all(bind=engine)
 
