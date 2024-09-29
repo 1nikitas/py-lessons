@@ -9,15 +9,17 @@ from typing import List
 from uvicorn.config import logger
 from src.schemas import OrderDetailsResponse, Time
 from fastapi import APIRouter
+from src.constants import ApiTags
+from sqlalchemy.ext.asyncio import AsyncConnection
 
-order_details_view = APIRouter(prefix='/order_details')
+order_details_view = APIRouter(prefix='/order_details', tags=[ApiTags.ORDER_DETAILS])
 
 
 @order_details_view.post("", response_model=OrderDetailsResponse)
 async def create_order_detail( 
     id: int, 
     detail_data: OrderDetailsResponse, 
-    db: Session = Depends(get_connection), 
+    db: AsyncConnection = Depends(get_connection), 
     order_details_controller: OrderDetailsController = Depends(get_order_details_controller)
 ):
     """Add new detail to order"""
@@ -26,7 +28,7 @@ async def create_order_detail(
 @order_details_view.get("", response_model=List[OrderDetailsResponse])
 async def read_order_details(
     id: int, 
-    db: Session = Depends(get_connection), 
+    db: AsyncConnection = Depends(get_connection), 
     order_details_controller: OrderDetailsController = Depends(get_order_details_controller)
 ):
     """Fetch all details for a specific order"""
@@ -36,7 +38,7 @@ async def read_order_details(
 async def remove_order_detail(
     id: int, 
     serial_number: str, 
-    db: Session = Depends(get_connection), 
+    db: AsyncConnection = Depends(get_connection), 
     order_details_controller: OrderDetailsController = Depends(get_order_details_controller)
 ):
     """Remove detail from order"""

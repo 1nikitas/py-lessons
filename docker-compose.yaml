@@ -15,7 +15,7 @@ services:
         max-size: "10m"
         max-file: "3"
     volumes:
-      - ./config.json:/app/code/config.json
+      - ./config.json:/app/code/local_config.json
       - ./src:/app/code/src
       - .:/app 
       
@@ -26,9 +26,9 @@ services:
       POSTGRES_USER: orders
       POSTGRES_PASSWORD: secret
     restart: "no"
-    command: [ 'postgres', '-p', '5433' ]
+    command: [ 'postgres', '-p', '5432' ]
     ports:
-      - "5433:5433"
+      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U orders"]
       interval: 10s
@@ -46,8 +46,8 @@ services:
     volumes:
       - ./db_dump.sql:/common/db_dump.sql
     environment:
-      - DB_URL=postgresql://user:password@localhost:5433/orders_db
-    command: /bin/sh -c "psql $DB_URL -f /common/db_dump.sql"
+      - DB_URL=postgresql://user:password@order_db:5432/orders_db
+    command: /bin/sh -c "psql $DB_URL -f db_dump.sql"
     networks:
       - network
 

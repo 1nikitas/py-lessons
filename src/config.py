@@ -12,6 +12,8 @@ class Settings(BaseSettings):
 
     @classmethod
     def load_settings(cls, path_to_configs: Path) -> 'Settings':
+
+
         with open(path_to_configs, 'r') as file:
             unparsed_settings = json.load(file)
         config = cls.model_validate(unparsed_settings)

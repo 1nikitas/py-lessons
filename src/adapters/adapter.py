@@ -12,11 +12,6 @@ class Adapter(ABC):
         pass
 
     @abstractmethod
-    def get_by_id(self, db: Session, id: int) -> Any:
-        """Get a record by ID"""
-        pass
-
-    @abstractmethod
     def create(self, db: Session, data: Any) -> Any:
         """Create a new record"""
         pass

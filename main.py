@@ -10,7 +10,7 @@ from src.routers.order_details import order_details_view
 from src.routers.utils import time_view
 def init_app() -> FastAPI:
     db_manager.init_db(db_url=settings.postgresql_url, debug=settings.debug)
-
+    print(f'settings.postgresql_url: {settings. postgresql_url}')
     application = FastAPI(
         docs_url=f'{settings.api_prefix}/docs',
         openapi_url=f'{settings.api_prefix}/openapi.json',

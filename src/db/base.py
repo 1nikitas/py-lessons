@@ -75,8 +75,3 @@ async def get_connection() -> AsyncConnection:
 async def get_db_session() -> AsyncSession:
     async with db_manager.get_session() as session:
         yield session
-
-def execute_all(sql, connect=get_connection()):
-    execute = connect.execute(sql)
-    connect.commit()
-    return execute
