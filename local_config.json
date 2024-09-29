@@ -1,0 +1,6 @@
+{
+    "debug": true,
+    "postgresql_url": "postgresql+asyncpg://orders:secret@localhost:5433/orders",
+    "api_prefix": ""
+}
+  
